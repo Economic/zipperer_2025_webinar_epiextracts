@@ -1,3 +1,6 @@
+# OK how do you use the EPI CPS extracts
+# first let's open R, orient our selves, and install some packages
+
 # this is Rstudio
 # here is console window
 # files pane
@@ -95,6 +98,12 @@ download_cps("org", "/home/bzipperer/cps_data")
 # take a break: questions
 
 # load data
+# before load_org_sample(): that's just some sample data
+# let's use the real data we download with load_org()
+# this will give an error
+load_org(2023)
+
+# this will work
 load_org(2023, .extracts_dir = "/home/bzipperer/cps_data")
 
 # this allows us to do analysis by education say age or a different race variable
@@ -102,6 +111,7 @@ load_org(2023, .extracts_dir = "/home/bzipperer/cps_data")
 # but what about this pesky .extracts_dir ?
 # use your .Renviron file to have that set by default
 usethis::edit_r_environ()
+# set EPIEXTRACTS_CPSORG_DIR
 
 # need to restart R
 # now load_org() will just work
@@ -201,9 +211,11 @@ results = org_data |>
 write_csv(results, "my_results.csv")
 
 
+# NEW SLIDE: 
 # other analysis you can do
-# reference slide and FAQ
+# reference FAQ
 
+# NEW ANALYSIS:
 # example employment analysis: use the basic
 #you will need to download the basic (takes a while)
 # download_cps("basic", "/home/benzipperer/cps_data")
@@ -227,3 +239,5 @@ basic_data |>
   ) 
 
 # show also statefips %in% c() construct
+
+# CONCLUDE 
