@@ -1,0 +1,124 @@
+---
+title: "Using the EPI CPS microdata extracts in R"
+author: "Ben Zipperer"
+date: "EARN Webinar | 29 August 2024" 
+output:
+  xaringan::moon_reader:
+    css: [default, metropolis, metropolis-fonts, my_metropolis.css] 
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+      beforeInit: "macros.js"
+---
+
+```{r global_options, include=FALSE}
+# This is a way to set options for all code chunks at once
+# Note that you can also dynamically control options by setting them to a value
+# DPI setting increased for Word output, cairo is anti aliasing
+knitr::opts_chunk$set(
+  include = FALSE,
+  tidy.opts = list(width.cutoff = 60), 
+  tidy = TRUE
+)
+```
+
+
+
+# Outline
+## 1. Introduction to Current Population Survey
+## 2. Set up R / Rstudio to use EPI CPS
+## 3. Example usage
+## 4. 
+---
+
+# Where we're headed
+## Write a R script that uses the EPI CPS extracts
+  * to calculate the number and share of workers paid less than $20/per hour 
+  * in your state 
+  * for each year between 2019 and 2023
+  * by gender.
+
+---
+# Resources
+### Slides for this talk
+
+https://economic.github.io/zipperer_2024_webinar_epiextracts
+
+### EPI CPS extracts documentation
+
+https://microdata.epi.org/
+
+### epiextractr package
+
+https://economic.github.io/epiextractr/
+
+
+---
+# Current Population Survey data
+
+### CPS background
+
+* One of the most important surveys about the US labor market
+* Monthly interviews of about 60,000 households conducted by the Census Bureau
+* Source of monthly unemployment rate data
+* Also a very good source of hourly wage data
+
+### How to access the data?
+
+* Bureau of Labor Statistics has easy to use aggregations
+* But if you need a custom analysis, especially by state, you need the microdata
+* Microdata are the individual survey responses
+* You can download the microdata from the Census (very cumbersome)
+* Or you can use the EPI CPS extracts (much easier)
+* IPUMS is another great source for CPS microdata
+
+### EPI CPS extracts documentation
+https://microdata.epi.org/
+
+---
+# CPS data structure
+
+### CPS Basic 
+* Every month households are asked questions about demographics and employment and other "basic" items
+  - This data the **CPS Basic**. Available monthly back to 1976
+
+### CPS ORG
+* About 1/4 of those people are asked questions about wages/earnings and union status
+  - This is the **CPS ORG**. Available monthly back to 1979ish.
+  - We're going to focus on this today.
+
+### CPS supplements
+* There are other CPS "supplements" that ask additional questions
+  - Annual poverty rates come from the **CPS March supplement**
+  - Voting and registration supplement, biennial in November
+
+---
+# How do you use the EPI CPS extracts in R?
+
+## Open R/Rstudio and install required packages
+
+**[epiextractr](https://economic.github.io/epiextractr/)**: makes it easy to use and download EPI CPS extracts
+```r
+install.packages(
+   "epiextractr", 
+   repos = c("https://economic.r-universe.dev", "https://cloud.r-project.org")
+)
+```
+
+**[tidyverse](https://www.tidyverse.org/)**: general data processing tools
+
+```r
+install.packages("tidyverse")
+```
+
+**[usethis](https://usethis.r-lib.org/)**: helpful for some configuration we'll do later
+```r
+install.packages("usethis")
+```
+
+---
+# Thank you!
+## Slides
+https://economic.github.io/zipperer_2024_webinar_epiextracts
