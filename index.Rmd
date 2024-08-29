@@ -29,16 +29,16 @@ knitr::opts_chunk$set(
 # Outline
 ## 1. Introduction to Current Population Survey
 ## 2. Set up R / Rstudio to use EPI CPS
-## 3. Example usage
-## 4. 
+## 3. Example usage with sample data
+## 4. Download and use the actual data with R
+
 ---
 
 # Where we're headed
 ## Write a R script that uses the EPI CPS extracts
   * to calculate the number and share of workers paid less than $20/per hour 
-  * in your state 
-  * for each year between 2019 and 2023
-  * by gender.
+  * in your state in 2023
+  * by gender
 
 ---
 # Resources
@@ -117,6 +117,20 @@ install.packages("tidyverse")
 ```r
 install.packages("usethis")
 ```
+---
+# Want to do other analysis with the CPS?
+## Wage or union analysis: CPS ORG with `orgwgt`
+```r
+load_org(2023, orgwgt, ...)
+```
+
+## Employment analysis: CPS Basic with `basicwgt`
+```r
+load_basic(2023, basicwgt, ...)
+```
+
+## Data sources and weights
+More on data sources and weights: https://microdata.epi.org/methodology/faq/#which-sample-weight-variable-should-i-use
 
 ---
 # Thank you!

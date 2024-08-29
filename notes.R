@@ -4,8 +4,8 @@
 # environment pane
 2+2
 2019:2023
-17
-low_wage_threshold = 17
+20
+low_wage_threshold = 20
 
 # install packages
 # also install skimr
@@ -45,17 +45,17 @@ summarize(wage_earners, number_of_workers = sum(orgwgt / 12000000))
 # low wage earners
 
 # another wage variable, inclusive of OTC
-low_wage_earners = filter(org_data, wage > 0 & wage < 17)
+low_wage_earners = filter(org_data, wage > 0 & wage < 20)
 count(low_wage_earners, wt = orgwgt/ 12)
 
-low_wageotc_earners = filter(org_data, wageotc > 0 & wageotc < 17)
-count(wageotc_earners, wt = orgwgt / 12)
+low_wageotc_earners = filter(org_data, wageotc > 0 & wageotc < 20)
+count(low_wageotc_earners, wt = orgwgt / 12)
 
 # look at low wage workforce tracker
 # do by gender
 
-count(wageotc_earners, wt = orgwgt / 12)
-count(wageotc_earners, female, wt = orgwgt / 12)
+count(low_wageotc_earners, wt = orgwgt / 12)
+count(low_wageotc_earners, female, wt = orgwgt / 12)
 
 # note that this is lopsided because of sexist labor market
 
@@ -65,7 +65,7 @@ library(epiextractr)
 library(tidyverse)
 
 org_data = load_org_sample(2023)
-low_wageotc_earners = filter(org_data, wageotc > 0 & wageotc < 17)
+low_wageotc_earners = filter(org_data, wageotc > 0 & wageotc < 20)
 count(wageotc_earners, female, wt = orgwgt / 12)
 
 # let's do a specific state, like GA
@@ -94,11 +94,10 @@ download_cps("org", "/home/bzipperer/cps_data")
 
 # take a break: questions
 
-
 # load data
 load_org(2023, .extracts_dir = "/home/bzipperer/cps_data")
 
-# this allows us to do analysis by age, say
+# this allows us to do analysis by education say age or a different race variable
 
 # but what about this pesky .extracts_dir ?
 # use your .Renviron file to have that set by default
@@ -108,7 +107,10 @@ usethis::edit_r_environ()
 # now load_org() will just work
 load_org(2023)
 
-load_org(2019:2023, year, orgwgt, wageotc, female, age, statefips)
+# now do script by wbhao
+load_org(2019:2023, year, orgwgt, wageotc, female, wbhao, statefips)
+
+# make our script better
 
 # let's do pipes
 library(tidyverse)
@@ -117,13 +119,111 @@ library(epiextractr)
 org_data = load_org(2023, year, orgwgt, wageotc, female, statefips)
 
 org_data |> 
-  filter(wageotc > 0 & wageotc < 17) |> 
+  filter(wageotc > 0 & wageotc < 20) |> 
   count(female, wt = orgwgt / 12)
 
 org_data |> 
-  filter(wageotc > 0 & wageotc < 17) |> 
+  filter(wageotc > 0 & wageotc < 20) |> 
   filter(statefips == 13) |> 
   count(female, wt = orgwgt / 12)
 
+# let's calculate shares of low wage workers too
+org_data |> 
+  filter(wageotc > 0) |> 
+  mutate(low_wage_status = if_else(wageotc < 20, 1, 0)) |> 
+  count(low_wage_status, wt = orgwgt / 12)
+
+# mean
+org_data |> 
+  filter(wageotc > 0) |> 
+  mutate(low_wage_status = if_else(wageotc < 20, 1, 0)) |> 
+  summarize(
+    low_wage_share = mean(low_wage_status)
+  )
+
+# weighted mean
+org_data |> 
+  filter(wageotc > 0) |> 
+  mutate(low_wage_status = if_else(wageotc < 20, 1, 0)) |> 
+  summarize(
+    low_wage_share = weighted.mean(low_wage_status, w = orgwgt)
+  )
+
+# put it together
+org_data |> 
+  filter(wageotc > 0) |> 
+  mutate(low_wage_status = if_else(wageotc < 20, 1, 0)) |> 
+  summarize(
+    low_wage_share = weighted.mean(low_wage_status, w = orgwgt),
+    low_wage_count = sum(orgwgt / 12)
+  )
+
+org_data |> 
+  filter(wageotc > 0) |> 
+  mutate(low_wage_status = if_else(wageotc < 20, 1, 0)) |> 
+  summarize(
+    low_wage_share = weighted.mean(low_wage_status, w = orgwgt),
+    low_wage_count = sum(low_wage_status * orgwgt / 12)
+  )
+
+# now do this by gender
+org_data |> 
+  filter(wageotc > 0) |> 
+  mutate(low_wage_status = if_else(wageotc < 20, 1, 0)) |> 
+  summarize(
+    low_wage_share = weighted.mean(low_wage_status, w = orgwgt),
+    low_wage_count = sum(low_wage_status * orgwgt / 12),
+    .by = female
+  )
+
+# now restrict to GA
+org_data |> 
+  filter(wageotc > 0) |> 
+  filter(statefips == 13) |> 
+  mutate(low_wage_status = if_else(wageotc < 20, 1, 0)) |> 
+  summarize(
+    low_wage_share = weighted.mean(low_wage_status, w = orgwgt),
+    low_wage_count = sum(low_wage_status * orgwgt / 12000),
+    .by = female
+  )
+
+# write these results to a csv file
+results = org_data |> 
+  filter(wageotc > 0) |> 
+  filter(statefips == 13) |> 
+  mutate(low_wage_status = if_else(wageotc < 20, 1, 0)) |> 
+  summarize(
+    low_wage_share = weighted.mean(low_wage_status, w = orgwgt),
+    low_wage_count = sum(low_wage_status * orgwgt / 12000),
+    .by = female
+  )
+
+write_csv(results, "my_results.csv")
 
 
+# other analysis you can do
+# reference slide and FAQ
+
+# example employment analysis: use the basic
+#you will need to download the basic (takes a while)
+# download_cps("basic", "/home/benzipperer/cps_data")
+# need to add
+# EPIEXTRACTS_CPSBASIC_DIR="/data/cps/basic/epi/"
+library(tidyverse)
+library(epiextractr)
+basic_data = load_basic(2023, year, emp, basicwgt, age, statefips, female) 
+  
+basic_data |> 
+  filter(age >= 25 & age <= 54, basicwgt > 0) |> 
+  summarize(prime_age_epop = weighted.mean(emp, w = basicwgt))
+
+# or maybe just some states
+basic_data |> 
+  filter(age >= 25 & age <= 54, basicwgt > 0) |> 
+  filter(statefips == 13 | statefips == 1 | statefips == 2) |> 
+  summarize(
+    prime_age_epop = weighted.mean(emp, w = basicwgt),
+    .by = statefips
+  ) 
+
+# show also statefips %in% c() construct
