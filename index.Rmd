@@ -1,7 +1,7 @@
 ---
 title: "Using the EPI CPS microdata extracts in R"
 author: "Ben Zipperer"
-date: "EARN Webinar | 29 August 2024" 
+date: "EARN Webinar | 16 September 2025" 
 output:
   xaringan::moon_reader:
     css: [default, metropolis, metropolis-fonts, my_metropolis.css] 
@@ -37,14 +37,14 @@ knitr::opts_chunk$set(
 # Where we're headed
 ## Write a R script that uses the EPI CPS extracts
   * to calculate the number and share of workers paid less than $20/per hour 
-  * in your state in 2023
+  * in your state in 2024
   * by gender
 
 ---
 # Resources
 ### Slides for this talk
 
-https://economic.github.io/zipperer_2024_webinar_epiextracts
+https://economic.github.io/zipperer_2025_webinar_epiextracts
 
 ### EPI CPS extracts documentation
 
@@ -83,17 +83,18 @@ https://microdata.epi.org/
 
 ### CPS Basic 
 * Every month households are asked questions about demographics and employment and other "basic" items
-  - This data the **CPS Basic**. Available monthly back to 1976
+  - This is the **CPS Basic**. Available monthly back to 1976
 
 ### CPS ORG
 * About 1/4 of those people are asked questions about wages/earnings and union status
-  - This is the **CPS ORG**. Available monthly back to 1979ish.
+  - This is the **CPS ORG**. Available monthly back to 1979.
   - We're going to focus on this today.
 
 ### CPS supplements
 * There are other CPS "supplements" that ask additional questions
-  - Annual poverty rates come from the **CPS March supplement**
+  - Annual poverty rates come from the **CPS March supplement (ASEC)** 
   - Voting and registration supplement, biennial in November
+  - CPS May which has earnings/union info back to 1973
 
 ---
 # How do you use the EPI CPS extracts in R?
@@ -122,12 +123,12 @@ install.packages("usethis")
 # Want to do other analysis with the CPS?
 ## Wage or union analysis: CPS ORG with `orgwgt`
 ```r
-load_org(2023, orgwgt, ...)
+load_org(2024, orgwgt, ...)
 ```
 
 ## Employment analysis: CPS Basic with `basicwgt`
 ```r
-load_basic(2023, basicwgt, ...)
+load_basic(2024, basicwgt, ...)
 ```
 
 ## Data sources and weights
@@ -136,4 +137,4 @@ More on data sources and weights: https://microdata.epi.org/methodology/faq/#whi
 ---
 # Thank you!
 ## Slides
-https://economic.github.io/zipperer_2024_webinar_epiextracts
+https://economic.github.io/zipperer_2025_webinar_epiextracts

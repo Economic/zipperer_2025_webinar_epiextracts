@@ -5,6 +5,9 @@
 # here is console window
 # files pane
 # environment pane
+
+# TELL FOLKS TO REMOVE AUTOMATIC RDATA LOADING/SAVING
+
 2+2
 2019:2023
 20
@@ -106,6 +109,10 @@ load_org(2023)
 # this will work
 load_org(2023, .extracts_dir = "/home/bzipperer/cps_data")
 
+load_org(2024, .extracts_dir = "/home/bzipperer/cps_data")
+
+load_org(2025, .extracts_dir = "/home/bzipperer/cps_data")
+
 # this allows us to do analysis by education say age or a different race variable
 
 # but what about this pesky .extracts_dir ?
@@ -115,10 +122,10 @@ usethis::edit_r_environ()
 
 # need to restart R
 # now load_org() will just work
-load_org(2023)
+load_org(2024)
 
 # now do script by wbhao
-load_org(2019:2023, year, orgwgt, wageotc, female, wbhao, statefips)
+load_org(2019:2024, year, orgwgt, wageotc, female, wbhao, statefips)
 
 # make our script better
 
@@ -126,7 +133,7 @@ load_org(2019:2023, year, orgwgt, wageotc, female, wbhao, statefips)
 library(tidyverse)
 library(epiextractr)
 
-org_data = load_org(2023, year, orgwgt, wageotc, female, statefips)
+org_data = load_org(2024, year, orgwgt, wageotc, female, statefips)
 
 org_data |> 
   filter(wageotc > 0 & wageotc < 20) |> 
@@ -223,11 +230,13 @@ write_csv(results, "my_results.csv")
 # EPIEXTRACTS_CPSBASIC_DIR="/data/cps/basic/epi/"
 library(tidyverse)
 library(epiextractr)
-basic_data = load_basic(2023, year, emp, basicwgt, age, statefips, female) 
+basic_data = load_basic(2024, year, emp, basicwgt, age, statefips, female) 
   
 basic_data |> 
   filter(age >= 25 & age <= 54, basicwgt > 0) |> 
   summarize(prime_age_epop = weighted.mean(emp, w = basicwgt))
+
+# confirm those results with BLS CPS: www.bls.gov/cps
 
 # or maybe just some states
 basic_data |> 
