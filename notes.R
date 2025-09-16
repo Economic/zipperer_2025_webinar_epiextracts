@@ -8,6 +8,9 @@
 
 # TELL FOLKS TO REMOVE AUTOMATIC RDATA LOADING/SAVING
 
+# MAKE SURE TO INSTALL PACKAGES IN THE SLIDES; WE'LL GO OVER WHAT THIS MEANS LATER
+
+# R CONSOLE IS A CALCULATOR
 2+2
 2019:2023
 20
@@ -25,8 +28,11 @@ load_org_sample(2023)
 org_data = load_org_sample(2023)
 # look at data in environment pane
 # click on data and look at data browser
-# type org_data just to see in console window
 
+# type org_data just to see in console window
+org_data
+
+# Other ways to explore your data
 # use tidyverse to really explore your data
 library(tidyverse)
 glimpse(org_data)
@@ -93,7 +99,8 @@ org_data = load_org_sample(2019:2023, year, orgwgt, wageotc, female, statefips)
 # now that's not all the data, look at microdata site
 load_org_sample(2023)
 # vs: microdata.epi.org
-# download the actual data
+
+# now let's download the actual data
 # make a directory
 # then download data
 download_cps("org", "/home/bzipperer/cps_data")
@@ -118,7 +125,7 @@ load_org(2025, .extracts_dir = "/home/bzipperer/cps_data")
 # but what about this pesky .extracts_dir ?
 # use your .Renviron file to have that set by default
 usethis::edit_r_environ()
-# set EPIEXTRACTS_CPSORG_DIR
+# set EPIEXTRACTS_CPSORG_DIR = "/home/bzipperer/cps_data"
 
 # need to restart R
 # now load_org() will just work
